@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>My Web Page with Chainlit Widget</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>This is a simple web page with Chainlit integration.</p>
+
+    <script src="http://localhost:8003/copilot/index.js"></script>
+    <script>
+        // Listener for Chainlit custom function calls
+        window.addEventListener("chainlit-call-fn", (e) => {
+            const { name, args, callback } = e.detail;
+            callback("You sent: " + args.msg);
+        });
+
+        // Chainlit widget configuration and mounting
+        window.mountChainlitWidget({
+            chainlitServer: "http://localhost:8003", // Replace with your actual Chainlit server URL
+            theme: "light", // Can be 'light' or 'dark'
+            fontFamily: "Arial, sans-serif", // Default font family for the widget
+            button: {
+                containerId: "chainlit-button-container", // ID of the container element for the button
+                imageUrl: "https://example.com/icon.png", // Replace with your custom button icon URL
+                style: {
+                    size: "60px", // Size of the button
+                    bgcolor: "#0078D7", // Background color
+                    color: "#FFFFFF", // Text/icon color
+                    bgcolorHover: "#005BB5", // Background color on hover
+                    borderColor: "#004A9E", // Border color
+                    borderWidth: "2px", // Border width
+                    borderStyle: "solid", // Border style
+                    borderRadius: "50%", // Make the button circular
+                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Shadow effect
+                },
+            },
+        });
+    </script>
+
+    <div id="chainlit-button-container"></div>
+</body>
+</html>
