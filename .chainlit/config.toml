@@ -54,7 +54,7 @@ edit_message = true
 
 [UI]
 # Name of the assistant.
-name = "Bot"
+name = "chatBot"
 custom_css = "/public/custom.css"
 #custom_js = "/public/custom.js"
 
