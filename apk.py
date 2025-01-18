@@ -1,6 +1,11 @@
 from flask import Flask, render_template
+from flask import Flask, jsonify, request
+# from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+
+
 
 @app.route('/')
 def index():

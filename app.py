@@ -9,15 +9,18 @@ from PyPDF2 import PdfReader
 import chromadb
 from chromadb.utils import embedding_functions
 import uuid
+from datetime import datetime
+from database import insert_into_request_table
 
 client = Groq()
-
+current_datetime = datetime.now()
 settings = {
     "model": "llama-3.2-90b-vision-preview",
     "temperature": 0.7,
     "max_tokens": 7000,
     "top_p": 1
 }
+
 
 # Initialize ChromaDB
 chroma_client = chromadb.Client()
@@ -219,6 +222,9 @@ async def process_query(query):
     """Processes a user query, incorporating PDF knowledge when relevant."""
     message_history = cl.user_session.get("message_history")
     msg = cl.Message(content="")
+    
+    
+    
 
     try:
         # Query the PDF knowledge base
@@ -245,14 +251,42 @@ async def process_query(query):
             stream=True,
             stop=None
         )
-
-        for part in stream:
+       
+        for part in stream:   
             if token := part.choices[0].delta.content or "":
                 await msg.stream_token(token)
 
         # Add assistant's response to history
         message_history.append({"role": "assistant", "content": msg.content})
         cl.user_session.set("message_history", message_history)
+        user_id=1
+        print("message--------------:",msg.content) # output responce
+        print("query--------------------:",query)
+        print("model--------------------------:",settings["model"])
+        print("user_id--------------------------:",user_id)
+        print("Current Date and Time-------------:", current_datetime)
+
+        data_to_insert = {
+        "query": {query},
+        "model": {settings["model"]},
+        "user_id": 1,
+        "response": {msg.content},
+        "date_time": datetime.now() # Ensure this matches your database timestamp format
+        } 
+        data_to_insert["date_time"] = data_to_insert["date_time"].strftime("%Y-%m-%d %H:%M:%S")
+
+        for key, value in data_to_insert.items():
+            if isinstance(value, set):
+        # Convert sets to a string (or another compatible type)
+                data_to_insert[key] = ", ".join(value)
+                
+        # Call the function to insert data into the 'request' table
+        insert_into_request_table(data_to_insert)
+        
+
+
+
+
 
         await msg.update()
 
