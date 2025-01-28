@@ -47,3 +47,16 @@ def insert_into_request_table(data):
             print("Row successfully inserted into the 'request' table.")
     except Exception as e:
         print("Error while inserting into the database:", e)
+
+
+def extract_data(name):
+    data=[]
+    with engine.connect() as connection:
+        query = text("SELECT * FROM users WHERE name = :name")  # Use a parameterized query
+        result = connection.execute(query, {"name": name}) 
+        # print(result)
+
+        for row in result:
+            data.append(row)
+        return data  
+
