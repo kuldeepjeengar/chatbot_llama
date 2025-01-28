@@ -69,12 +69,31 @@
         button:hover {
             background-color: #45a049;
         }
+
+        /* Error Message Styling */
+        .alert {
+            color: red;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <!-- Form Container -->
     <div class="form-container">
         <h2>Login</h2>
+        
+        <!-- Display Error Message -->
+        {% if error_message %}
+            <div class="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
         <form method="POST" action="/log_in">
             <!-- Username Field -->
             <div class="form-group">
